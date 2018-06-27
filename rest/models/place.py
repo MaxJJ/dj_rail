@@ -5,9 +5,16 @@ class Place(models.Model):
     TYPE_OF_PLACE=[('port','SEA PORT'),
                     ('rwst','RAIL STATION')]
 
-    name = models.CharField(max_length=50,blank=True)
+    place_name = models.CharField(max_length=50,blank=True)
     place_type= models.CharField(choices=TYPE_OF_PLACE, max_length=50,blank=True)
+    place_code=models.CharField(max_length=6,default="000000")
     is_border = models.BooleanField()
+    road_name=models.CharField(max_length=100,blank=True)
+    road_name_abbr=models.CharField(max_length=4,blank=True)
+    road_code=models.CharField(max_length=4,blank=True)
+    road_operator_name=models(max_length=20,blank=True)
+
+
 
     class Meta:
         """Meta definition for Place."""
