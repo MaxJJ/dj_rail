@@ -7,7 +7,7 @@ class Order(models.Model):
     """Model definition for Order."""
     customer = models.CharField(max_length=10,blank=True,default="RLS")
     created = models.DateField(auto_now_add=True)
-    will_arrive = models.DateField(auto_now=True)
+    will_arrive = models.DateField()
     is_closed = models.BooleanField(default=False)
     short_description = models.CharField(max_length=100,blank=True,default="name")
     description = models.TextField(blank=True)

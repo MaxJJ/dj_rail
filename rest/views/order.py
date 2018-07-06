@@ -1,5 +1,6 @@
-from ..models import Order,Shipment
-from ..serializers import OrderSerializer,ShipmentSerializer,TstSerializer
+from ..models.order import Order
+from ..models.shipment import Shipment
+from ..serializers.order import OrderSerializer,ShipmentSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,7 +18,10 @@ class OrderList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = OrderSerializer(data=request.data)
+        id=request.data['id']
+        ord=Order.objects.get(pk=id)
+        serializer = OrderSerializer(ord,data=request.data)
+        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -136,21 +140,8 @@ class ShipmentList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class Tst(object):
-    def __init__(self,a,b,c):
-        self.a = a
-        self.b=b
-        self.c=c
 
-class AppendShipment(APIView):
-    """
-    Append new Shipment to Order
-    """  
-    
-    
-    def get(self,request,id,format=None):
-        tst=Tst(a="a-asdf",b="b-asjdk",c="c-kjhkjhk")
-        serializer = TstSerializer(tst)
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
+
+
         
     

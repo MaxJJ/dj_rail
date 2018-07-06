@@ -1,12 +1,17 @@
 from django.urls import path
-from . import views
+from .views.place import Places
+from .views.order import OrderList,OrdersInWork,OneOrder,OrderShipments,OrderShipment
 
+
+from .views.order import ShipmentList
 urlpatterns = [
-    path('orders',views.OrderList.as_view()),
-    path('orders/inwork',views.OrdersInWork.as_view()),
-    path('orders/<int:id>',views.OneOrder.as_view()),
-    path('orders/<int:id>/shipments',views.OrderShipments.as_view()),
-    path('orders/<int:id>/shipments/<int:shipment_id>',views.OrderShipment.as_view()),
-    path('orders/<int:id>/append/shipment',views.AppendShipment.as_view()),
-    path('shipments',views.ShipmentList.as_view())
+    path('orders',OrderList.as_view()),
+    path('orders/inwork',OrdersInWork.as_view()),
+    path('orders/<int:id>',OneOrder.as_view()),
+    path('orders/<int:id>/shipments',OrderShipments.as_view()),
+    path('orders/<int:id>/shipments/<int:shipment_id>',OrderShipment.as_view()),
+
+    path('places',Places.as_view()),
+    
+    path('shipments',ShipmentList.as_view()),
 ]
