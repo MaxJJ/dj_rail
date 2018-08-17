@@ -2,15 +2,25 @@ from django.db import models
 import datetime
 from .person import Person
 from .factura import Factura
+from .currency import Currency
+from .railbill import Railbill
+from .cargo import Cargo
+# from .order import Order
 
 
 class Shipment(models.Model):
     """Model definition for Shipment."""
     name = models.CharField(max_length=6)
-    from_order = models.OneToOneField('Order', on_delete=models.CASCADE,blank=True, null=True)
-    consignor = models.ForeignKey(Person, on_delete=models.CASCADE,related_name='consignor',default=1)
-    consignee = models.ForeignKey(Person, on_delete=models.CASCADE,related_name='consignee',default=1)
-    facturas = models.ManyToManyField(Factura,blank=True, null=True)
+    belongs_to_order = models.ForeignKey('Order',on_delete=models.DO_NOTHING)
+    buyer = models.ForeignKey(Person,related_name="buyer", on_delete=models.CASCADE,default=1)
+    seller = models.ForeignKey(Person,related_name="seller", on_delete=models.CASCADE,default=1)
+    incoterms_abbr=models.CharField(max_length=3,default="CIP")
+    incoterms_place=models.CharField(max_length=50,default="RIGA")
+    currency=models.ForeignKey(Currency, on_delete=models.CASCADE,default=1)
+    
+    railbill = models.ForeignKey(Railbill, on_delete=models.CASCADE,default=1)
+    facturas = models.ManyToManyField(Factura,default=1)
+    outbound_cargo = models.ManyToManyField(Cargo)
 
     class Meta:
         """Meta definition for Shipment."""

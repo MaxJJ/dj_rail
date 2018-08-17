@@ -1,7 +1,13 @@
-from .order import Order
+
+from .railbill import Railbill
 from .factura import Factura
-from .shipment import Shipment
+
 from .person import Person
 from .cargo import Cargo
 from .place import Place
-from .railbill import Railbill
+
+from .package import Package
+from .measure_unit import Unit
+from .currency import Currency
+from .shipment import Shipment
+from .order import Order

@@ -1,10 +1,20 @@
 from ..models.order import Order
+from ..models.place import Place
+from ..models.cargo import Cargo
 from ..models.shipment import Shipment
 from ..serializers.order import OrderSerializer,ShipmentSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
+class NewOrder(APIView):
+    
+    def get(self,request):
+        ord=Order()
+        ord.save()
+        serializer=OrderSerializer(ord)
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 class OrderList(APIView):
     """
@@ -20,12 +30,36 @@ class OrderList(APIView):
     def post(self, request, format=None):
         id=request.data['id']
         ord=Order.objects.get(pk=id)
+        dispatch_id=request.data['dispatch_place']['id']
+        disp=Place.objects.get(pk=dispatch_id)
+        inb_cargo=self.getCargo(request.data['inbound_cargo'])
+        ord.inbound_cargo.set(inb_cargo)
+       
+        
+        ord.dispatch_place=disp
         serializer = OrderSerializer(ord,data=request.data)
         
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def getCargo(self,crg):
+        cargos=[]
+        for c in crg:
+            if 'id' in c:
+                el=Cargo.objects.get(pk=c['id'])
+            else:
+                el=Cargo()
+            for k,v in el.__dict__.items():
+                if k in c:
+                    setattr(el,k,c[k])
+                    print(k,v,c[k])
+            el.save()
+            cargos.append(el)
+        print(cargos)
+           
+        return cargos
 
 class OrdersInWork(APIView):
     """
