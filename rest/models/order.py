@@ -4,6 +4,7 @@ from .cargo import Cargo
 from .shipment import Shipment
 from .person import Person
 from .place import Place
+from .comments import Comment
 
 class Order(models.Model):
     """Model definition for Order."""
@@ -12,7 +13,7 @@ class Order(models.Model):
     created = models.DateField(auto_now_add=True)
     will_arrive = models.DateField(auto_now_add=True)
     is_closed = models.BooleanField(default=False)
-    short_description = models.CharField(max_length=100,blank=True,default="name")
+    short_description = models.CharField(max_length=100,blank=True)
     description = models.TextField(blank=True)
     consignor = models.ForeignKey('Person', on_delete=models.CASCADE,related_name='consignor',default=1)
     consignee = models.ForeignKey('Person', on_delete=models.CASCADE,related_name='consignee',default=1)
@@ -26,7 +27,8 @@ class Order(models.Model):
     dispatch_place = models.ForeignKey('Place', on_delete=models.CASCADE,related_name='dispatch_place',default=1)
     destination_place = models.ForeignKey('Place', on_delete=models.CASCADE,related_name='destination_place',default=1)
    
-    shipments = models.ManyToManyField(Shipment,blank=True,related_name='shipments')
+    shipments = models.ManyToManyField(Shipment,related_name='shipments',blank = True,null=True)
+    comments = models.ManyToManyField(Comment,related_name='comments',blank = True,null=True)
 
 
 

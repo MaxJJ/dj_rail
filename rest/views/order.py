@@ -34,9 +34,16 @@ class OrderList(APIView):
         disp=Place.objects.get(pk=dispatch_id)
         inb_cargo=self.getCargo(request.data['inbound_cargo'])
         ord.inbound_cargo.set(inb_cargo)
-       
+        shp = request.data['shipments']
+        
+        for i in shp:
+            s=Shipment.objects.get(pk=i['id'])
+            s.__dict__.update(i)
+            s.save()
+            ord.shipments.add(s)
         
         ord.dispatch_place=disp
+       
         serializer = OrderSerializer(ord,data=request.data)
         
         if serializer.is_valid():
@@ -54,12 +61,15 @@ class OrderList(APIView):
             for k,v in el.__dict__.items():
                 if k in c:
                     setattr(el,k,c[k])
-                    print(k,v,c[k])
+                    
             el.save()
             cargos.append(el)
-        print(cargos)
-           
+            
         return cargos
+
+
+
+    
 
 class OrdersInWork(APIView):
     """

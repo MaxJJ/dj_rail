@@ -20,3 +20,13 @@ class ShipmentView(APIView):
         else:
             return Response(data="NOT FOUND",status=status.HTTP_404_NOT_FOUND)
 
+class CreateShipment(APIView):
+    """ Create and return new Shipment """
+    serializer_class = ShipmentSerializer
+
+    def get(self,request):
+        sh=Shipment(name='New')
+        sh.save()
+        serializer=ShipmentSerializer(sh)
+        
+        return Response(serializer.data)
