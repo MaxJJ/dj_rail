@@ -7,7 +7,7 @@ class Factura(models.Model):
 
     # TODO: Define fields here
     name = models.CharField(max_length=10,default='XXX-XXXX')
-    goods = models.ManyToManyField(Cargo)
+    goods = models.ManyToManyField('Cargo')
 
     class Meta:
         """Meta definition for Factura."""

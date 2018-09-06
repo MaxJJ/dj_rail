@@ -1,7 +1,7 @@
 from django.db import models
 import datetime
 from .person import Person
-from .factura import Factura
+
 from .currency import Currency
 from .railbill import Railbill
 from .cargo import Cargo
@@ -18,7 +18,7 @@ class Shipment(models.Model):
     container = models.ForeignKey('Container',related_name="container", on_delete=models.CASCADE,blank = True,null=True)
     buyer = models.ForeignKey(Person,related_name="buyer", on_delete=models.CASCADE,default=1,blank = True,null=True)
     seller = models.ForeignKey(Person,related_name="seller", on_delete=models.CASCADE,default=1,blank = True,null=True)
-    cargo = models.ForeignKey(Cargo,related_name="cargo", on_delete=models.CASCADE,blank = True,null=True)
+    cargo = models.ForeignKey('Cargo',related_name="cargo", on_delete=models.CASCADE,blank = True,null=True)
 
     class Meta:
         """Meta definition for Shipment."""

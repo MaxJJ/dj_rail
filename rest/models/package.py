@@ -8,6 +8,8 @@ class Package(models.Model):
     package_name_rus=models.CharField(max_length=30,blank=True)
     package_name_eng=models.CharField(max_length=30,blank=True)
     package_code=models.CharField(max_length=3,blank=True)
+    print_name=models.CharField(max_length=10,blank=True)
+
 
     class Meta:
         """Meta definition for Package."""

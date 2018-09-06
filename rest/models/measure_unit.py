@@ -4,9 +4,13 @@ class Unit(models.Model):
     """Model definition for Unit."""
 
     # TODO: Define fields here
-    unit_name_full=models.CharField(max_length=30,blank=True)
-    unit_name_short=models.CharField(max_length=30,blank=True)
-    unit_code=models.CharField(max_length=5,blank=True)
+   
+    name_full=models.CharField(max_length=30,blank=True)
+    name_full_eng=models.CharField(max_length=30,blank=True)
+
+    name_short=models.CharField(max_length=30,blank=True)
+    name_short_eng=models.CharField(max_length=30,blank=True)
+    code=models.CharField(max_length=5,blank=True)
     class Meta:
         """Meta definition for Unit."""
 
@@ -15,4 +19,4 @@ class Unit(models.Model):
 
     def __str__(self):
         """Unicode representation of Unit."""
-        pass
+        return self.name_full + 'Unit'

@@ -1,12 +1,12 @@
 from django.urls import path
 from .views.place import Places,SearchPlaces
 from .views.order import OrderList,OrdersInWork,OneOrder,OrderShipments,OrderShipment,NewOrder
-from .views.cargo import NewCargo,DeleteCargo
+from .views.cargo import NewCargo,DeleteCargo,CargoItemView,CargoByShipmentView,CargoSearchView
 from .views.shipment import ShipmentView,CreateShipment
 from .views.files_view import GdrFilesView
 from .views.comments import CommentView,CommentsToOrderListView
-from .views.person import PersonView
-
+from .views.person import PersonView,PersonSearchView,SavePersonView
+from .views.directories import UnitSearchView,PackageSearchView
 
 
 from .views.order import ShipmentList
@@ -31,6 +31,20 @@ urlpatterns = [
     path('api/comments/<int:order_id>/order_comments',CommentsToOrderListView.as_view()),
 
     path('api/persons/<int:id>',PersonView.as_view()),
+    path('api/persons/save',SavePersonView.as_view()),
+    path('api/persons/search',PersonSearchView.as_view()),
+
+    path('api/cargo/<int:id>',CargoItemView.as_view()),
+    path('api/cargo/of_shipment/<int:id>',CargoByShipmentView.as_view()),
+    path('api/cargo/search',CargoSearchView.as_view()),
+
+
+    path('api/directories/units',UnitSearchView.as_view()),
+    path('api/directories/packages',PackageSearchView.as_view()),
+
+
+
+
 
     path('api/files/gdr',GdrFilesView.as_view()),
 ]
