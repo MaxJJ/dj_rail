@@ -5,3 +5,4 @@ from .files_view import GdrFilesView
 from .person import PersonView,PersonSearchView
 from .cargo import CargoByShipmentView,CargoItemView,CargoSearchView
 from .directories import UnitSearchView
+from .shipment import ShipmentView,FacturasListView

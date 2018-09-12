@@ -5,6 +5,7 @@ from .person import Person
 from .currency import Currency
 from .railbill import Railbill
 from .cargo import Cargo
+from .factura import Factura
 # from .order import Order
 
 
@@ -19,6 +20,9 @@ class Shipment(models.Model):
     buyer = models.ForeignKey(Person,related_name="buyer", on_delete=models.CASCADE,default=1,blank = True,null=True)
     seller = models.ForeignKey(Person,related_name="seller", on_delete=models.CASCADE,default=1,blank = True,null=True)
     cargo = models.ForeignKey('Cargo',related_name="cargo", on_delete=models.CASCADE,blank = True,null=True)
+    # facturas = models.ForeignKey(Factura,related_name="shipments_facturas", on_delete=models.CASCADE,blank = True,null=True)
+    facturas = models.ManyToManyField(Factura,related_name="shipments_facturas")
+    rw_bill = models.OneToOneField(Railbill,on_delete=models.CASCADE,null=True)
 
     class Meta:
         """Meta definition for Shipment."""

@@ -6,3 +6,4 @@ from .cargo import CargoSerializer
 from .package_info import Package,Unit
 from .rtme_file_serializer import RtmeFileSerializer
 from .comments import CommentSerializer
+from .factura import Factura
