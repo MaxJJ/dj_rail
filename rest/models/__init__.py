@@ -10,7 +10,7 @@ from .package import Package
 from .measure_unit import Unit
 from .currency import Currency
 from .shipment import Shipment
-from .order import Order
+from .order import Order,InboundDoc
 from .rtme_file_model import RtmeFileModel
 from .comments import Comment
 from .container import Container

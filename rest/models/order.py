@@ -6,6 +6,25 @@ from .person import Person
 from .place import Place
 from .comments import Comment
 
+class InboundDoc(models.Model):
+    """Model definition for InboundDoc."""
+
+    doc_type=models.CharField(max_length=20,default="Bill Of Lading")
+    number=models.CharField(max_length=20,blank=True)
+    places=models.IntegerField(default=0)
+    gross=models.FloatField(default=0.0)
+
+    class Meta:
+        """Meta definition for InboundDoc."""
+
+        verbose_name = 'InboundDoc'
+        verbose_name_plural = 'InboundDocs'
+
+    def __str__(self):
+        """Unicode representation of InboundDoc."""
+        return self.number
+
+
 class Order(models.Model):
     """Model definition for Order."""
     customer = models.CharField(max_length=10,blank=True,default="RLS")
@@ -18,6 +37,7 @@ class Order(models.Model):
     consignor = models.ForeignKey('Person', on_delete=models.CASCADE,related_name='consignor',default=1)
     consignee = models.ForeignKey('Person', on_delete=models.CASCADE,related_name='consignee',default=1)
     inbound_bill = models.CharField(blank=True,max_length=30)
+    inbound_docs = models.ManyToManyField(InboundDoc,blank=True)
     transit_or_export = models.CharField(blank=True,max_length=10)
     inbound_cargo = models.ManyToManyField(Cargo,blank=True)
     total_inbound_places = models.IntegerField(null=True)
@@ -41,3 +61,6 @@ class Order(models.Model):
 
     def __str__(self):
         return "%s : %s" % (self.short_description,self.destination_place)
+
+
+

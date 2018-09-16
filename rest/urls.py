@@ -1,6 +1,6 @@
 from django.urls import path
 from .views.place import Places,SearchPlaces
-from .views.order import OrderList,OrdersInWork,OneOrder,OrderShipments,OrderShipment,NewOrder
+from .views.order import OrderList,OrdersInWork,OneOrder,OrderShipments,OrderShipment,NewOrder,InboundDocsView,AddInboundDocView,OrderShipmentCreate
 from .views.cargo import NewCargo,DeleteCargo,CargoItemView,CargoByShipmentView,CargoSearchView
 from .views.shipment import ShipmentView,CreateShipment,FacturaView,FacturasListView
 from .views.files_view import GdrFilesView
@@ -16,6 +16,9 @@ urlpatterns = [
     path('api/orders/inwork',OrdersInWork.as_view()),
     path('api/orders/<int:id>',OneOrder.as_view()),
     path('api/orders/<int:id>/shipments',OrderShipments.as_view()),
+    path('api/orders/<int:id>/shipments/create',OrderShipmentCreate.as_view()),
+    path('api/orders/<int:id>/indocs',InboundDocsView.as_view()),
+    path('api/orders/<int:id>/indocs/<int:doc_id>',AddInboundDocView.as_view()),
     
 
     path('api/places',Places.as_view()),

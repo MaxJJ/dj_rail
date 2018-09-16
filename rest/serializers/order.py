@@ -1,10 +1,17 @@
 from rest_framework import serializers
-from ..models.order import Order
+from ..models.order import Order,InboundDoc
 from ..models.place import Place
 from .shipment import ShipmentSerializer
 from .place import PlaceSerializer
 from .cargo import CargoSerializer
 from .person import PersonSerializer
+
+class InboundDocSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=InboundDoc
+        fields='__all__'
+
 
 class OrderSerializer(serializers.ModelSerializer):
     shipments=ShipmentSerializer( many=True,read_only=True)
@@ -14,7 +21,7 @@ class OrderSerializer(serializers.ModelSerializer):
     will_arrive=serializers.DateField(format="%d-%m-%Y",input_formats=['%d-%m-%Y',])
     consignor=PersonSerializer(read_only=True)
     consignee=PersonSerializer(read_only=True)
-    
+    inbound_docs=InboundDocSerializer(many=True,read_only=True)
 
     class Meta:
         model=Order

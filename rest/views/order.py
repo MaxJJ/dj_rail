@@ -1,8 +1,8 @@
-from ..models.order import Order
+from ..models.order import Order,InboundDoc
 from ..models.place import Place
 from ..models.cargo import Cargo
 from ..models.shipment import Shipment
-from ..serializers.order import OrderSerializer,ShipmentSerializer
+from ..serializers.order import OrderSerializer,ShipmentSerializer,InboundDocSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -34,8 +34,8 @@ class OrderList(APIView):
         disp=Place.objects.get(pk=dispatch_id)
         inb_cargo=self.getCargo(request.data['inbound_cargo'])
         ord.inbound_cargo.set(inb_cargo)
+
         shp = request.data['shipments']
-        
         for i in shp:
             s=Shipment.objects.get(pk=i['id'])
             s.__dict__.update(i)
@@ -43,6 +43,16 @@ class OrderList(APIView):
             ord.shipments.add(s)
         
         ord.dispatch_place=disp
+
+        docs=request.data['inbound_docs']
+        docs_serializer = InboundDocSerializer(data=docs,many=True)
+        if docs_serializer.is_valid():
+            docs_serializer.save()
+            for d in docs:
+                docum=InboundDoc.objects.get(pk=d['id'])
+                docum.__dict__.update(d)
+                docum.save()
+                ord.inbound_docs.add(docum)
        
         serializer = OrderSerializer(ord,data=request.data)
         
@@ -95,6 +105,9 @@ class OneOrder(APIView):
 
     def post(self, request,id,format=None):
         order = Order.objects.get(pk=id)
+ 
+       
+
         serializer = OrderSerializer(order,data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -109,24 +122,10 @@ class OrderShipments(APIView):
 
     def get(self,request,id,format=None):
         order = Order.objects.get(pk=id)
-        shipments = order.shipments
+        shipments = Shipment.objects.all().filter(order=order)
         serializer = ShipmentSerializer(shipments,many=True)
         return Response(serializer.data)
-    def put(self,request,id,format=None):
-        order = Order.objects.get(pk=id)
-        
-        serializer = ShipmentSerializer(data=request.data)
-        if serializer.is_valid():
-            
-            shipment=serializer.save()
-            order.shipments.add(serializer.instance)
-            # order.save()
-            shipments=order.shipments
-            srlz=ShipmentSerializer(shipments,many=True)
-
-            return Response(srlz.data,status=status.HTTP_201_CREATED)
-        return Response(srlz.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
 class OrderShipment(APIView):
     """
     Shipment belonging to order
@@ -166,6 +165,16 @@ class OrderShipment(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class OrderShipmentCreate(APIView):
+    serializer_class = ShipmentSerializer
+    def get(self,request,id):
+        shipment=Shipment()
+        order=Order.objects.get(pk=id)
+        shipment.order=order
+        shipment.save()
+        serializer=ShipmentSerializer(shipment)
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+
 class ShipmentList(APIView):
     """
     List all snippets, or create a new snippet.
@@ -174,6 +183,7 @@ class ShipmentList(APIView):
     
     def get(self, request, format=None):
         shipment = Shipment.objects.all()
+        
         serializer = ShipmentSerializer(shipment, many=True)
         return Response(serializer.data)
 
@@ -185,7 +195,33 @@ class ShipmentList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class InboundDocsView(APIView):
 
+    serializer_class=   InboundDocSerializer
 
-        
-    
+    def get(self,request,id):
+        order = Order.objects.get(pk=id)
+        docs = order.inbound_docs     
+        serializer=InboundDocSerializer(docs,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+class AddInboundDocView(APIView):
+
+    serializer_class= InboundDocSerializer
+
+    def get(self,request,id,doc_id):
+        order = Order.objects.get(pk=id)
+        docs=order.inbound_docs
+        if doc_id==0:
+            doc=InboundDoc()
+            doc.save()
+            docs.add(doc)
+            order.save()
+        else:
+            doc = InboundDoc.objects.get(pk=doc_id)
+            docs.remove(doc)
+            order.save()
+            doc.delete()
+
+        serializer=InboundDocSerializer(docs,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
