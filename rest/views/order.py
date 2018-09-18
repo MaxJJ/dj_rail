@@ -126,44 +126,6 @@ class OrderShipments(APIView):
         serializer = ShipmentSerializer(shipments,many=True)
         return Response(serializer.data)
     
-class OrderShipment(APIView):
-    """
-    Shipment belonging to order
-    """
-    serializer_class = ShipmentSerializer
-
-    def check(self,order,pk):
-        shpms=[s for s in order.shipments.all() if s.id==pk]
-        if shpms:
-           return True
-        else:
-            return False       
-    
-    def get(self, request,id,shipment_id, format=None):
-        order = Order.objects.get(pk=id)
-        if self.check(order,shipment_id):
-            shipment=order.shipments.get(pk=shipment_id)
-                   
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = ShipmentSerializer(shipment)
-        return Response(serializer.data)
-
-    def post(self, request,id,shipment_id, format=None):
-        order = Order.objects.get(pk=id)
-        if self.check(order,shipment_id):
-            shipment=order.shipments.get(pk=shipment_id)
-            
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        
-        serializer = ShipmentSerializer(shipment,data=request.data)
-
-        if serializer.is_valid():
-            
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class OrderShipmentCreate(APIView):
     serializer_class = ShipmentSerializer

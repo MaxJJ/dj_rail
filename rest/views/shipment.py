@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from ..models.shipment import Shipment
+from ..models.container import Container
 from ..models.factura import Factura
 from ..serializers.shipment import ShipmentSerializer
 from ..serializers.factura import FacturaSerializer
@@ -64,3 +65,29 @@ class FacturasListView(APIView):
 
         factura_serializer = FacturaSerializer(facturas,many=True)
         return Response(factura_serializer.data,status=status.HTTP_200_OK)
+
+class ShipmentContainer(APIView):
+    """ create or delete Shipment's container """
+
+    def get(self,request,id,qry):
+        shipment=Shipment.objects.get(pk=id)
+        if qry==0:
+            c=Container()
+            c.save()
+            shipment.container=c
+            shipment.cargo_is_general=False
+            
+        else:
+            if shipment.container:
+                c=Container.objects.get(pk=shipment.container.id)
+                c.delete()
+                shipment.container=None
+                shipment.cargo_is_general=True
+        
+        shipment.save()
+
+        srlz=ShipmentSerializer(shipment)
+        return Response(srlz.data,status=status.HTTP_200_OK)
+            
+
+    

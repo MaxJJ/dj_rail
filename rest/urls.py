@@ -1,8 +1,8 @@
 from django.urls import path
 from .views.place import Places,SearchPlaces
-from .views.order import OrderList,OrdersInWork,OneOrder,OrderShipments,OrderShipment,NewOrder,InboundDocsView,AddInboundDocView,OrderShipmentCreate
+from .views.order import OrderList,OrdersInWork,OneOrder,OrderShipments,NewOrder,InboundDocsView,AddInboundDocView,OrderShipmentCreate
 from .views.cargo import NewCargo,DeleteCargo,CargoItemView,CargoByShipmentView,CargoSearchView
-from .views.shipment import ShipmentView,CreateShipment,FacturaView,FacturasListView
+from .views.shipment import ShipmentView,CreateShipment,FacturaView,FacturasListView,ShipmentContainer
 from .views.files_view import GdrFilesView
 from .views.comments import CommentView,CommentsToOrderListView
 from .views.person import PersonView,PersonSearchView,SavePersonView
@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/shipments/create',CreateShipment.as_view()),
     path('api/shipments',ShipmentList.as_view()),
     path('api/shipments/<int:id>',ShipmentView.as_view()),
+    path('api/shipments/<int:id>/container/<int:qry>',ShipmentContainer.as_view()),
 
     path('api/shipments/<int:id>/facturas/<int:factura_id>',FacturaView.as_view()),
     path('api/shipments/<int:id>/facturas/all',FacturasListView.as_view()),

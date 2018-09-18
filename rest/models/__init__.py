@@ -15,3 +15,4 @@ from .rtme_file_model import RtmeFileModel
 from .comments import Comment
 from .container import Container
 from .country import Country
+from .invoice import Invoice
