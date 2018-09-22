@@ -2,6 +2,10 @@ from ..models.order import Order,InboundDoc
 from ..models.place import Place
 from ..models.cargo import Cargo
 from ..models.shipment import Shipment
+from ..models.container import Container
+from ..models.factura import Factura
+from ..models.invoice import Invoice
+from ..models.railbill import Railbill
 from ..serializers.order import OrderSerializer,ShipmentSerializer,InboundDocSerializer
 from django.http import Http404
 from rest_framework.views import APIView
@@ -13,6 +17,7 @@ class NewOrder(APIView):
     def get(self,request):
         ord=Order()
         ord.save()
+        
         serializer=OrderSerializer(ord)
         return Response(serializer.data,status=status.HTTP_201_CREATED)
 
@@ -43,16 +48,8 @@ class OrderList(APIView):
             ord.shipments.add(s)
         
         ord.dispatch_place=disp
+        ord=self.__updateIndocs(request.data,ord)
 
-        docs=request.data['inbound_docs']
-        docs_serializer = InboundDocSerializer(data=docs,many=True)
-        if docs_serializer.is_valid():
-            docs_serializer.save()
-            for d in docs:
-                docum=InboundDoc.objects.get(pk=d['id'])
-                docum.__dict__.update(d)
-                docum.save()
-                ord.inbound_docs.add(docum)
        
         serializer = OrderSerializer(ord,data=request.data)
         
@@ -77,6 +74,17 @@ class OrderList(APIView):
             
         return cargos
 
+    def __updateIndocs(self,data,order):
+        docs=data['inbound_docs']
+        docs_serializer = InboundDocSerializer(data=docs,many=True)
+        if docs_serializer.is_valid():
+            docs_serializer.save()
+            for d in docs:
+                docum=InboundDoc.objects.get(pk=d['id'])
+                docum.__dict__.update(d)
+                docum.save()
+                order.inbound_docs.add(docum)
+        return order
 
 
     
@@ -130,12 +138,28 @@ class OrderShipments(APIView):
 class OrderShipmentCreate(APIView):
     serializer_class = ShipmentSerializer
     def get(self,request,id):
-        shipment=Shipment()
-        order=Order.objects.get(pk=id)
-        shipment.order=order
-        shipment.save()
+        shipment= self.__set_defaults(id)
         serializer=ShipmentSerializer(shipment)
         return Response(serializer.data,status=status.HTTP_201_CREATED)
+    def __set_defaults(self,id):
+        shipment=Shipment(name='ID-')
+        order=Order.objects.get(pk=id)
+        shipment.order=order
+
+        
+
+        factura=Factura()
+        factura.save()
+        invoice=Invoice()
+        invoice.save()
+        railbill=Railbill()
+        railbill.save()
+        shipment.save()
+        shipment.facturas.set([factura,])
+        shipment.invoices.set([invoice,])
+        shipment.rw_bill=railbill
+        shipment.save()
+        return shipment
 
 class ShipmentList(APIView):
     """
@@ -156,6 +180,46 @@ class ShipmentList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class OrderShipmentGetSave(APIView):
+    """
+    Get order's shipment - get / save order's Shipment - post
+    """
+    serializer_class = ShipmentSerializer
+
+    def get(self,request,id,shipment_id):
+        shipment=Shipment.objects.get(pk=id)
+        serializer=ShipmentSerializer(data=shipment)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+    def post(self,request,id,shipment_id):
+        order=Order.objects.get(pk=id)
+        shipment=Shipment.objects.get(pk=shipment_id)
+        
+        req_container=request.data['container']
+        if req_container is not None:
+            container=Container.objects.get(pk=req_container['id'])
+            container.__dict__.update(req_container)
+            container.save()
+            shipment.container=container
+        else:
+            shipment.cargo_is_general=True
+            
+        req_invoices = request.data['invoices']
+
+        for i in req_invoices:
+            inv = Invoice.objects.get(pk=i['id'])
+            inv.__dict__.update(i)
+            inv.save()
+            shipment.invoices.add(inv)
+
+        shipment.order=order
+        shipment.save()
+        serializer=ShipmentSerializer(shipment,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            return Response(serializer.errors)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
 class InboundDocsView(APIView):
 

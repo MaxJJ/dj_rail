@@ -5,7 +5,9 @@ from rest_framework import status
 from ..models.shipment import Shipment
 from ..models.container import Container
 from ..models.factura import Factura
-from ..serializers.shipment import ShipmentSerializer
+from ..models.invoice import Invoice
+from ..models.railbill import Railbill
+from ..serializers.shipment import ShipmentSerializer,InvoiceSerializer
 from ..serializers.factura import FacturaSerializer
 
 
@@ -23,16 +25,35 @@ class ShipmentView(APIView):
         else:
             return Response(data="NOT FOUND",status=status.HTTP_404_NOT_FOUND)
 
+    # def post(self,request,id):
+    #     sh=Shipment.objects.get(pk=id)
+    #     invoices=request.data['invoices']
+
+
 class CreateShipment(APIView):
     """ Create and return new Shipment """
     serializer_class = ShipmentSerializer
 
     def get(self,request):
-        sh=Shipment(name='New')
+        sh=Shipment(name='ID-')
         sh.save()
+        sh=self.__set_defaults(sh)
         serializer=ShipmentSerializer(sh)
-        
         return Response(serializer.data)
+
+    def __set_defaults(self,shipment):
+        factura=Factura()
+        factura.save()
+        invoice=Invoice()
+        invoice.save()
+        railbill=Railbill()
+        railbill.save()
+        shipment.facturas.add(factura)
+        shipment.invoices.add(invoice)
+        shipment.rw_bill=railbill
+        shipment.save()
+        return shipment
+
 
 
 class FacturaView(APIView):
@@ -88,6 +109,19 @@ class ShipmentContainer(APIView):
 
         srlz=ShipmentSerializer(shipment)
         return Response(srlz.data,status=status.HTTP_200_OK)
-            
+
+
+class ShipmentInvoice(APIView):
+    """"Create Invoice 
+            return Invoice created"""
+
+    def get(self,request,id):
+
+        shipment = Shipment.objects.get(pk=id)
+        invoice=Invoice()
+        invoice.save()
+        serializer=InvoiceSerializer(invoice)
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+                  
 
     
