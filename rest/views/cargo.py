@@ -76,7 +76,8 @@ class CargoByShipmentView(APIView):
 
     def get(self,request,id):
         sh= Shipment.objects.get(pk=id)
-        cargo_set = Cargo.objects.all().filter(shipment=sh)
+        # cargo_set = Cargo.objects.all().filter(shipment=sh)
+        cargo_set = Cargo.objects.all()
         serializer=CargoSerializer(cargo_set,many=True)
 
         return Response(serializer.data,status=status.HTTP_200_OK)

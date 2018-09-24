@@ -19,7 +19,7 @@ class Factura(models.Model):
     delivery_terms_place=models.CharField(max_length=30,blank=True,null=True)
     contract_name=models.CharField(max_length=50,blank=True,null=True)
     contract_number=models.CharField(max_length=50,blank=True,null=True)
-    cargo=models.ForeignKey(Cargo,related_name='factura_cargo',on_delete=models.SET_DEFAULT,default=CARGO)
+    cargo=models.ManyToManyField(Cargo,related_name='facturas_cargo')
     places=models.IntegerField(blank=True,null=True)
     pcs=models.FloatField(blank=True,null=True)
     nett=models.FloatField(blank=True,null=True)

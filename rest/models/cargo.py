@@ -2,13 +2,14 @@ from django.db import models
 import datetime
 from .package import Package
 
+
+
 from .measure_unit import Unit
 
 
 class Cargo(models.Model):
     """Model definition for Cargo."""
 
-    shipment=models.ForeignKey('Shipment',related_name="of_shipment", on_delete=models.CASCADE,null=True)
     is_container = models.NullBooleanField()
     container_tare = models.FloatField(null=True)
     description = models.TextField(blank=True)
@@ -25,8 +26,7 @@ class Cargo(models.Model):
     gross_weight=models.FloatField(null=True)
     unit_price=models.FloatField(null=True)
     total=models.FloatField(null=True)
-    invoice_number = models.CharField(max_length=50, blank=True)
-    
+    factura = models.ForeignKey('Factura',related_name="from_factura",on_delete=models.SET_NULL,null=True)
 
     class Meta:
         """Meta definition for Cargo."""

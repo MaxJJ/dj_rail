@@ -1,10 +1,11 @@
 from django.db import models
 import datetime
+from .comments import Comment
 from .cargo import Cargo
 from .shipment import Shipment
 from .person import Person
 from .place import Place
-from .comments import Comment
+
 
 class InboundDoc(models.Model):
     """Model definition for InboundDoc."""

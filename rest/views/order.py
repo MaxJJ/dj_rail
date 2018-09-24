@@ -7,6 +7,7 @@ from ..models.factura import Factura
 from ..models.invoice import Invoice
 from ..models.railbill import Railbill
 from ..serializers.order import OrderSerializer,ShipmentSerializer,InboundDocSerializer
+from ..serializers.cargo import CargoSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -196,6 +197,8 @@ class OrderShipmentGetSave(APIView):
         shipment=Shipment.objects.get(pk=shipment_id)
         
         req_container=request.data['container']
+        req_facturas=request.data['facturas']
+        shipment.facturas.set(self.__updateFacturas(req_facturas)) 
         if req_container is not None:
             container=Container.objects.get(pk=req_container['id'])
             container.__dict__.update(req_container)
@@ -220,6 +223,27 @@ class OrderShipmentGetSave(APIView):
         else:
             return Response(serializer.errors)
         return Response(serializer.data,status=status.HTTP_200_OK)
+
+    def __updateFacturas(self,req):
+        updated=[]
+        for f in req:
+            factura = Factura.objects.get(pk=f['id'])
+            cargo=f['cargo']
+            for c in cargo:
+                cargo_item=Cargo.objects.get(pk=c['id'])
+                cargo_item.__dict__.update(c)
+                c_ser = CargoSerializer(cargo_item,data=c)
+
+                if c_ser.is_valid():
+                   c_ser.save()
+               
+                cargo_item.__dict__.update(c_ser.data)   
+            
+                cargo_item.save()
+                factura.cargo.add(cargo_item)
+            updated.append(factura)
+        return updated
+
 
 class InboundDocsView(APIView):
 
