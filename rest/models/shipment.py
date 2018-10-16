@@ -18,7 +18,7 @@ class Shipment(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE,default=1,blank = True,null=True)
     contract=models.CharField(max_length=50,default="ПО ИНВОЙСУ")
     cargo_is_general=models.NullBooleanField()
-    container = models.ForeignKey('Container',related_name="container",on_delete=models.SET_NULL,null=True,default=CONTAINER)
+    container = models.ForeignKey('Container',related_name="container",on_delete=models.SET_NULL,null=True)
     buyer = models.ForeignKey(Person,related_name="buyer",on_delete=models.SET_DEFAULT,default=PERSON)
     seller = models.ForeignKey(Person,related_name="seller",on_delete=models.SET_DEFAULT,default=PERSON)
     # cargo = models.ForeignKey('Cargo',related_name="cargo", on_delete=models.DO_NOTHING,blank = True,null=True)

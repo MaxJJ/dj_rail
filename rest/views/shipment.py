@@ -7,7 +7,7 @@ from ..models.container import Container
 from ..models.factura import Factura
 from ..models.invoice import Invoice
 from ..models.railbill import Railbill
-from ..serializers.shipment import ShipmentSerializer,InvoiceSerializer
+from ..serializers.shipment import ShipmentSerializer,InvoiceSerializer,ContainerSerializer
 from ..serializers.factura import FacturaSerializer
 
 
@@ -123,5 +123,62 @@ class ShipmentInvoice(APIView):
         serializer=InvoiceSerializer(invoice)
         return Response(serializer.data,status=status.HTTP_201_CREATED)
                   
+class ShipmentInfoView(APIView):
+    """ Update Shipment's info  name,description,container """
 
+    def post(self,request,id):
+        shipment = Shipment.objects.get(pk=id)
+        shipment.name = request.data['name']
+        shipment.description = request.data['description']
+        shipment.cargo_is_general=request.data['isGeneral']
+
+        if request.data['isGeneral']==True:
+            if shipment.container is not None:
+                # container=Container.objects.get(pk=shipment.container.id)
+                container_id =shipment.container.id
+                shipment.container=None
+                container=Container.objects.get(pk=container_id)
+                container.delete()
+                
+            else:
+                pass
+
+        else:
+            print(request.data['container'])
+            cont_id=request.data['container']['id']
+            
+            if cont_id==0:
+                container=Container()
+                container.save()
+            else:
+                container=Container.objects.get(pk=cont_id)
+                container.save()
+
+            container_serializer=ContainerSerializer(container,data=request.data['container'])
+            if container_serializer.is_valid():
+                container=container_serializer.save()
+            else:
+                print(container_serializer.errors)
+
+            shipment.container=container
+        
+        shipment.save()
+
+        shipment_serializer = ShipmentSerializer(shipment)
+        return Response(shipment_serializer.data,status=status.HTTP_200_OK)
+        # if shipment_serializer.is_valid():
+        #     shipment_serializer.save()
+        #     return Response(shipment_serializer.data,status=status.HTTP_200_OK)
+        # else:
+        #     return Response(shipment_serializer.errors)
+
+                    
+
+            
+
+            
+            
+
+
+    
     

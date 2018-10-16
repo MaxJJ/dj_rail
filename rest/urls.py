@@ -1,8 +1,8 @@
 from django.urls import path
 from .views.place import Places,SearchPlaces
-from .views.order import OrderList,OrdersInWork,OneOrder,OrderShipments,NewOrder,InboundDocsView,AddInboundDocView,OrderShipmentCreate,OrderShipmentGetSave
+from .views.order import OrderList,OrdersInWork,OneOrder,OrderShipments,NewOrder,InboundDocsView,AddInboundDocView,OrderShipmentCreate,OrderShipmentGetSave,DeleteOrder
 from .views.cargo import NewCargo,DeleteCargo,CargoItemView,CargoByShipmentView,CargoSearchView
-from .views.shipment import ShipmentView,CreateShipment,FacturaView,FacturasListView,ShipmentContainer,ShipmentInvoice
+from .views.shipment import ShipmentView,CreateShipment,FacturaView,FacturasListView,ShipmentContainer,ShipmentInvoice,ShipmentInfoView
 from .views.files_view import GdrFilesView
 from .views.comments import CommentView,CommentsToOrderListView
 from .views.person import PersonView,PersonSearchView,SavePersonView
@@ -16,6 +16,7 @@ urlpatterns = [
     path('api/orders/new',NewOrder.as_view()),
     path('api/orders/inwork',OrdersInWork.as_view()),
     path('api/orders/<int:id>',OneOrder.as_view()),
+    path('api/orders/<int:id>/delete',DeleteOrder.as_view()),
     path('api/orders/<int:id>/shipments',OrderShipments.as_view()),
     path('api/orders/<int:id>/shipments/<int:shipment_id>',OrderShipmentGetSave.as_view()),
     path('api/orders/<int:id>/shipments/create',OrderShipmentCreate.as_view()),
@@ -31,6 +32,7 @@ urlpatterns = [
     path('api/shipments/create',CreateShipment.as_view()),
     path('api/shipments',ShipmentList.as_view()),
     path('api/shipments/<int:id>',ShipmentView.as_view()),
+    path('api/shipments/<int:id>/info',ShipmentInfoView.as_view()),
     path('api/shipments/<int:id>/container/<int:qry>',ShipmentContainer.as_view()),
     path('api/shipments/<int:id>/invoices/create',ShipmentInvoice.as_view()),
 

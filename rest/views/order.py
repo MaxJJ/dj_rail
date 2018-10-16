@@ -2,6 +2,7 @@ from ..models.order import Order,InboundDoc
 from ..models.place import Place
 from ..models.cargo import Cargo
 from ..models.shipment import Shipment
+from ..models.person import Person
 from ..models.container import Container
 from ..models.factura import Factura
 from ..models.invoice import Invoice
@@ -36,19 +37,8 @@ class OrderList(APIView):
     def post(self, request, format=None):
         id=request.data['id']
         ord=Order.objects.get(pk=id)
-        dispatch_id=request.data['dispatch_place']['id']
-        disp=Place.objects.get(pk=dispatch_id)
-        inb_cargo=self.getCargo(request.data['inbound_cargo'])
-        ord.inbound_cargo.set(inb_cargo)
-
-        shp = request.data['shipments']
-        for i in shp:
-            s=Shipment.objects.get(pk=i['id'])
-            s.__dict__.update(i)
-            s.save()
-            ord.shipments.add(s)
-        
-        ord.dispatch_place=disp
+        ord=self.__updatePersons(request.data,ord)
+        ord=self.__updateStations(request.data,ord)
         ord=self.__updateIndocs(request.data,ord)
 
        
@@ -59,22 +49,25 @@ class OrderList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def getCargo(self,crg):
-        cargos=[]
-        for c in crg:
-            if 'id' in c:
-                el=Cargo.objects.get(pk=c['id'])
-            else:
-                el=Cargo()
-            for k,v in el.__dict__.items():
-                if k in c:
-                    setattr(el,k,c[k])
-                    
-            el.save()
-            cargos.append(el)
-            
-        return cargos
 
+
+    def __updatePersons(self,data,order):
+        consignee_id=data['consignee']['id']
+        consignor_id=data['consignor']['id']
+        consignee=Person.objects.get(pk=consignee_id)
+        consignor=Person.objects.get(pk=consignor_id)
+        order.consignee=consignee
+        order.consignor=consignor
+        return order
+    def __updateStations(self,data,order):
+        dispatch_id=data['dispatch_place']['id']
+        destination_id=data['destination_place']['id']
+        dispatch=Place.objects.get(pk=dispatch_id)
+        destination=Place.objects.get(pk=destination_id)
+        order.dispatch_place=dispatch
+        order.destination_place=destination
+        return order
+        
     def __updateIndocs(self,data,order):
         docs=data['inbound_docs']
         docs_serializer = InboundDocSerializer(data=docs,many=True)
@@ -101,6 +94,16 @@ class OrdersInWork(APIView):
         serializer=OrderSerializer(orders,many=True)
         return Response(serializer.data)
 
+class DeleteOrder(APIView):
+    def delete(self,request,id):
+        
+        ord=Order.objects.get(pk=id)
+        shipments=Shipment.objects.all().filter(order=ord)
+        for sh in shipments:
+            sh.delete()
+        ord.delete()
+        return Response('order '+ str(id) +' is deleted', status=status.HTTP_204_NO_CONTENT)
+
 class OneOrder(APIView):
     """
     List all snippets, or create a new snippet.
@@ -122,6 +125,8 @@ class OneOrder(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        
 
 class OrderShipments(APIView):
     """

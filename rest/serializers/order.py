@@ -14,8 +14,7 @@ class InboundDocSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    shipments=ShipmentSerializer( many=True,read_only=True)
-    inbound_cargo=CargoSerializer(many=True,read_only=True)
+       
     dispatch_place=PlaceSerializer(read_only=True)
     destination_place=PlaceSerializer(read_only=True)
     will_arrive=serializers.DateField(format="%d-%m-%Y",input_formats=['%d-%m-%Y',])
