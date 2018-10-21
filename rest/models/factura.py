@@ -2,13 +2,15 @@ from django.db import models
 import datetime
 from .cargo import Cargo
 from .person import Person
+from .shipment import Shipment
 from .model_defaults import *
 
 class Factura(models.Model):
     """Model definition for Factura."""
 
     # TODO: Define fields here
-    name = models.CharField(max_length=10,default='XXX-XXXX')
+    shipment=models.ForeignKey(Shipment,on_delete=models.SET_NULL,null=True)
+    name = models.CharField(max_length=10,blank=True)
     doc_name = models.CharField(max_length=50,default='СЧЕТ-ФАКТУРА')
     date=models.DateField(auto_now=True)
     buyer=models.ForeignKey(Person,related_name='factura_buyer',on_delete=models.SET_DEFAULT,default=PERSON)

@@ -29,9 +29,6 @@ class ShipmentSerializer(serializers.ModelSerializer):
 
     
     container=ContainerSerializer(read_only=True)
-    invoices=InvoiceSerializer(many=True,read_only=True)
-    facturas=FacturaSerializer(many=True,read_only=True)
-    rw_bill=RailBillSerializer(read_only=True)
 
     class Meta:
         model=Shipment

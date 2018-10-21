@@ -2,18 +2,18 @@ from django.db import models
 from gdstorage.storage import GoogleDriveStorage
 from gdstorage.storage import GoogleDriveStorage, GoogleDrivePermissionType, GoogleDrivePermissionRole, GoogleDriveFilePermission
 
-permission =  GoogleDriveFilePermission(
-   GoogleDrivePermissionRole.READER,
-   GoogleDrivePermissionType.USER,
-   "railtransme@gmail.com"
-)
+# permission =  GoogleDriveFilePermission(
+#    GoogleDrivePermissionRole.READER,
+#    GoogleDrivePermissionType.USER,
+#    "railtransme@gmail.com"
+# )
 
-gd_storage = GoogleDriveStorage(permissions=(permission, ))
+# gd_storage = GoogleDriveStorage(permissions=(permission, ))
 
 class RtmeFileModel(models.Model):
     """Model definition for RtmeFile."""
 
-    content=models.FileField(upload_to='', storage=gd_storage,blank=True,default='')
+    # content=models.FileField(upload_to='', storage=gd_storage,blank=True,default='')
     file_name=models.CharField(max_length=100,blank=True,default='')
     file_description=models.CharField(max_length=100,blank=True,default='no description')
     gdr_id=models.CharField(max_length=100,default='0000')

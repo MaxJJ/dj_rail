@@ -2,7 +2,7 @@ from django.db import models
 import datetime
 from .comments import Comment
 from .cargo import Cargo
-from .shipment import Shipment
+# from .shipment import Shipment
 from .person import Person
 from .place import Place
 
@@ -48,7 +48,7 @@ class Order(models.Model):
     dispatch_place = models.ForeignKey('Place', on_delete=models.CASCADE,related_name='dispatch_place',default=1)
     destination_place = models.ForeignKey('Place', on_delete=models.CASCADE,related_name='destination_place',default=1)
    
-    shipments = models.ManyToManyField(Shipment,related_name='shipments',blank = True,null=True)
+    # shipments = models.ManyToManyField(Shipment,related_name='shipments',blank = True,null=True)
     comments = models.ManyToManyField(Comment,related_name='comments',blank = True,null=True)
 
 

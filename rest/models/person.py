@@ -25,4 +25,4 @@ class Person(models.Model):
 
     def __str__(self):
         """Unicode representation of Person."""
-        return "person:%s" % self.name
+        return 'myrepr'

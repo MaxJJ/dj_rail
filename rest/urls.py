@@ -1,25 +1,24 @@
 from django.urls import path
 from .views.place import Places,SearchPlaces
-from .views.order import OrderList,OrdersInWork,OneOrder,OrderShipments,NewOrder,InboundDocsView,AddInboundDocView,OrderShipmentCreate,OrderShipmentGetSave,DeleteOrder
+from .views.order import OrderList,OrdersInWork,OneOrder,NewOrder,InboundDocsView,AddInboundDocView,DeleteOrder
 from .views.cargo import NewCargo,DeleteCargo,CargoItemView,CargoByShipmentView,CargoSearchView
-from .views.shipment import ShipmentView,CreateShipment,FacturaView,FacturasListView,ShipmentContainer,ShipmentInvoice,ShipmentInfoView
+from .views.shipment import ShipmentView,CreateShipment,ShipmentInfoView,OrdersShipments
+from .views.factura import FacturaView,FacturasListView,CreateFactura
 from .views.files_view import GdrFilesView
 from .views.comments import CommentView,CommentsToOrderListView
 from .views.person import PersonView,PersonSearchView,SavePersonView
 from .views.directories import UnitSearchView,PackageSearchView
-from .views.invoice import InvoiceView
+from .views.invoice import InvoiceView,CreateShipmentsInvoice,ShipmentsInvoices
 
 
-from .views.order import ShipmentList
 urlpatterns = [
     path('api/orders',OrderList.as_view()),
     path('api/orders/new',NewOrder.as_view()),
     path('api/orders/inwork',OrdersInWork.as_view()),
     path('api/orders/<int:id>',OneOrder.as_view()),
     path('api/orders/<int:id>/delete',DeleteOrder.as_view()),
-    path('api/orders/<int:id>/shipments',OrderShipments.as_view()),
-    path('api/orders/<int:id>/shipments/<int:shipment_id>',OrderShipmentGetSave.as_view()),
-    path('api/orders/<int:id>/shipments/create',OrderShipmentCreate.as_view()),
+    path('api/orders/<int:id>/shipments',OrdersShipments.as_view()),
+    path('api/orders/<int:id>/shipments/create',CreateShipment.as_view()),
     path('api/orders/<int:id>/indocs',InboundDocsView.as_view()),
     path('api/orders/<int:id>/indocs/<int:doc_id>',AddInboundDocView.as_view()),
     
@@ -29,15 +28,16 @@ urlpatterns = [
     path('api/getnewcargo',NewCargo.as_view()),
     path('api/deletecargo/<int:id>',DeleteCargo.as_view()),
     
-    path('api/shipments/create',CreateShipment.as_view()),
-    path('api/shipments',ShipmentList.as_view()),
     path('api/shipments/<int:id>',ShipmentView.as_view()),
     path('api/shipments/<int:id>/info',ShipmentInfoView.as_view()),
-    path('api/shipments/<int:id>/container/<int:qry>',ShipmentContainer.as_view()),
-    path('api/shipments/<int:id>/invoices/create',ShipmentInvoice.as_view()),
+    path('api/shipments/<int:id>/invoices',ShipmentsInvoices.as_view()),
+    path('api/shipments/<int:id>/invoices/create',CreateShipmentsInvoice.as_view()),
+    
+    path('api/shipments/<int:id>/facturas',FacturasListView.as_view()),
+    path('api/shipments/<int:id>/facturas/create',CreateFactura.as_view()),
 
-    path('api/shipments/<int:id>/facturas/<int:factura_id>',FacturaView.as_view()),
-    path('api/shipments/<int:id>/facturas/all',FacturasListView.as_view()),
+    path('api/factura/<int:id>',FacturaView.as_view()),
+    
 
     path('api/comments/<int:order_id>/comment/<int:id>',CommentView.as_view()),
     path('api/comments/<int:order_id>/order_comments',CommentsToOrderListView.as_view()),

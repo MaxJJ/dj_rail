@@ -2,13 +2,14 @@ from django.db import models
 from .person import Person
 from .measure_unit import Unit
 from .package import Package
+from .shipment import Shipment
 from .model_defaults import *
 
 
 
 class Invoice(models.Model):
     """Model definition for Invoice."""
-
+    shipment=models.ForeignKey(Shipment,on_delete=models.SET_NULL,null=True)
     number=models.CharField(max_length=50,blank=True)
     date=models.DateField(auto_now=True)
     currency=models.CharField(max_length=3,blank=True)
@@ -32,4 +33,4 @@ class Invoice(models.Model):
 
     def __str__(self):
         """Unicode representation of Invoice."""
-        pass
+        return 'invoice - %s' % (self.id,)
