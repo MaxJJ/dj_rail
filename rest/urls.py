@@ -1,7 +1,7 @@
 from django.urls import path
 from .views.place import Places,SearchPlaces
 from .views.order import OrderList,OrdersInWork,OneOrder,NewOrder,InboundDocsView,AddInboundDocView,DeleteOrder
-from .views.cargo import NewCargo,DeleteCargo,CargoItemView,CargoByShipmentView,CargoSearchView
+from .views.cargo import NewCargo,DeleteCargo,CargoItemView,CargoByShipmentView,CargoSearchView,FacturasCargo,IndexedCargoView
 from .views.shipment import ShipmentView,CreateShipment,ShipmentInfoView,OrdersShipments
 from .views.factura import FacturaView,FacturasListView,CreateFactura
 from .views.files_view import GdrFilesView
@@ -37,6 +37,8 @@ urlpatterns = [
     path('api/shipments/<int:id>/facturas/create',CreateFactura.as_view()),
 
     path('api/factura/<int:id>',FacturaView.as_view()),
+    path('api/factura/<int:id>/cargo',FacturasCargo.as_view()),
+    path('api/factura/<int:id>/cargo/<int:cargo_id>',CargoItemView.as_view()),
     
 
     path('api/comments/<int:order_id>/comment/<int:id>',CommentView.as_view()),
@@ -49,6 +51,8 @@ urlpatterns = [
     path('api/cargo/<int:id>',CargoItemView.as_view()),
     path('api/cargo/of_shipment/<int:id>',CargoByShipmentView.as_view()),
     path('api/cargo/search',CargoSearchView.as_view()),
+    path('api/cargo/indexed',IndexedCargoView.as_view()),
+
 
 
     path('api/invoice/<int:id>',InvoiceView.as_view()),

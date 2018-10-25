@@ -14,7 +14,7 @@ class Person(models.Model):
     city = models.CharField(max_length=50,blank=True)
     street_house = models.CharField(max_length=100,blank=True)
     rail_code = models.CharField(max_length=4,blank=True,default='9999')
-    country=models.ForeignKey('Country',related_name='country',on_delete=models.CASCADE,blank = True,null=True)
+    country=models.ForeignKey('Country',related_name='country',on_delete=models.SET_NULL,null=True)
 
 
     class Meta:

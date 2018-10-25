@@ -19,4 +19,4 @@ class Package(models.Model):
 
     def __str__(self):
         """Unicode representation of Package."""
-        pass
+        return '-- %s' % self.package_name_rus

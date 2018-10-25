@@ -4,6 +4,7 @@ from .package import Package
 
 
 
+
 from .measure_unit import Unit
 
 
@@ -27,6 +28,8 @@ class Cargo(models.Model):
     unit_price=models.FloatField(null=True)
     total=models.FloatField(null=True)
     factura = models.ForeignKey('Factura',related_name="from_factura",on_delete=models.SET_NULL,null=True)
+    is_indexed=models.NullBooleanField()
+
 
     class Meta:
         """Meta definition for Cargo."""

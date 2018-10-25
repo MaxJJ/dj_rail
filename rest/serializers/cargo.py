@@ -16,19 +16,15 @@ class CargoSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
 
-        instance.description = validated_data.get('description',instance.description)
-        unit_data=validated_data.pop('unit',None)
-      
-        unit,u_created=Unit.objects.get_or_create(**unit_data)
-
-
+        package_data=validated_data.pop('package')
+        package=Package.objects.get(pk=package_data['id'])
+        unit_data=validated_data.pop('unit')
+        unit=Unit.objects.get(pk=unit_data['id'])
         
-        instance.unit=unit
-        package_data=validated_data.pop('package',None)
-        package,p_created =Package.objects.get_or_create(**package_data)
         instance.package=package
+        instance.unit=unit
+        instance.__dict__.update(validated_data)
         
         instance.save()
-        print(instance.description)
-        print(validated_data)
+
         return instance 
