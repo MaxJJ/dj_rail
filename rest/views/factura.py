@@ -32,6 +32,12 @@ class FacturaView(APIView):
             
             factura_srlz.save()
             return Response(factura_srlz.data,status=status.HTTP_200_OK)
+        else:
+            return Response(factura_srlz.errors)
+    def delete(self,request,id):
+        f=Factura.objects.get(pk=id)
+        f.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class FacturasListView(APIView):

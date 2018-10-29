@@ -24,6 +24,9 @@ class Invoice(models.Model):
     packages_qty=models.IntegerField(default=0)
     nett_kgs=models.FloatField(default=0.0)
     gross_kgs=models.FloatField(default=0.0)
+    total=models.FloatField(default=0.0)
+    extra_cost=models.FloatField(default=0.0)
+    grand_total=models.FloatField(default=0.0)
 
     class Meta:
         """Meta definition for Invoice."""
@@ -33,4 +36,4 @@ class Invoice(models.Model):
 
     def __str__(self):
         """Unicode representation of Invoice."""
-        return 'invoice - %s' % (self.id,)
+        return 'invoice - %s' % (self.number,)

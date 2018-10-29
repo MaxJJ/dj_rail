@@ -30,6 +30,11 @@ class Factura(models.Model):
     total_amount=models.FloatField(blank=True,null=True)
     currency=models.CharField(max_length=4,blank=True,null=True)
     footer=models.TextField(blank=True,null=True)
+    footer_first_str=models.TextField(blank=True,null=True)
+
+    extra_total_description=models.CharField(max_length=100,blank=True,null=True)
+    extra_total=models.FloatField(blank=True,null=True)
+    grand_total=models.FloatField(blank=True,null=True)
     currency=models.CharField(max_length=4,blank=True,null=True)
 
 
