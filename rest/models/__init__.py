@@ -16,3 +16,4 @@ from .comments import Comment
 from .container import Container
 from .country import Country
 from .invoice import Invoice
+from .road_section import RoadSection

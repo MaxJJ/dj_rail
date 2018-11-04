@@ -7,3 +7,4 @@ from .cargo import CargoByShipmentView,CargoItemView,CargoSearchView
 from .directories import UnitSearchView
 from .shipment import ShipmentView
 from .factura import FacturasListView,FacturaView,CreateFactura
+from .railbill import RailbillView,CreateRailbill

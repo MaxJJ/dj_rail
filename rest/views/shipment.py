@@ -42,6 +42,11 @@ class ShipmentView(APIView):
         else:
             return Response(serializer.errors,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def delete(self,request,id):
+        sh=Shipment.objects.get(pk=id)
+        sh.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     def __updateContainer(self,container):
         id=container['id']
         print(id)

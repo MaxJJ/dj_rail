@@ -6,7 +6,7 @@ class Place(models.Model):
 
     place_name = models.CharField(max_length=50,blank=True)
     place_code=models.CharField(max_length=6,default="000000")
-    is_border = models.NullBooleanField(default=False)
+    is_out = models.NullBooleanField(default=False)
     road_name=models.CharField(max_length=100,blank=True)
     road_name_abbr=models.CharField(max_length=4,blank=True)
     road_code=models.CharField(max_length=4,blank=True)
@@ -22,4 +22,4 @@ class Place(models.Model):
 
     def __str__(self):
         """Unicode representation of Place."""
-        return " %s : %s" % (self.id,self.place_name)
+        return " %s : %s" % (self.place_code,self.place_name)
