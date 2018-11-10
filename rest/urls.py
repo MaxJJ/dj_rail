@@ -9,7 +9,7 @@ from .views.comments import CommentView,CommentsToOrderListView
 from .views.person import PersonView,PersonSearchView,SavePersonView
 from .views.directories import UnitSearchView,PackageSearchView
 from .views.invoice import InvoiceView,CreateShipmentsInvoice,ShipmentsInvoices
-from .views.railbill import RailbillView,CreateRailbill
+from .views.railbill import RailbillView,CreateRailbill,CreateRoadSection
 
 
 urlpatterns = [
@@ -33,6 +33,7 @@ urlpatterns = [
     path('api/shipments/<int:id>/info',ShipmentInfoView.as_view()),
     path('api/shipments/<int:id>/rwb',RailbillView.as_view()),
     path('api/shipments/<int:id>/rwb/create',CreateRailbill.as_view()),
+    path('api/shipments/<int:id>/rwb/road_sections/create',CreateRoadSection.as_view()),
     path('api/shipments/<int:id>/invoices',ShipmentsInvoices.as_view()),
     path('api/shipments/<int:id>/invoices/create',CreateShipmentsInvoice.as_view()),
     
