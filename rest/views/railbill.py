@@ -28,6 +28,16 @@ class RailbillView(APIView):
         rwb_serializer=RailBillSerializer(rwb)
         return Response(rwb_serializer.data,status=status.HTTP_200_OK)
 
+    def post(self,request,id):
+        rwb_id=request.data['id']
+        rwb=Railbill.objects.get(pk=rwb_id)
+        rwb_serializer=RailBillSerializer(rwb,request.data)
+        if rwb_serializer.is_valid():
+            rwb_serializer.save()
+            return Response(rwb_serializer.data,status=status.HTTP_200_OK)
+        else:
+            return Response(rwb_serializer.errors)
+
 
 
 class CreateRailbill(APIView):

@@ -3,14 +3,14 @@ from django.db import models
 class Place(models.Model):
     """Model definition for Place."""
 
-
-    place_name = models.CharField(max_length=50,blank=True)
+    
+    place_name = models.CharField(max_length=50,blank=True, null=True)
     place_code=models.CharField(max_length=6,default="000000")
     is_out = models.NullBooleanField(default=False)
-    road_name=models.CharField(max_length=100,blank=True)
-    road_name_abbr=models.CharField(max_length=4,blank=True)
-    road_code=models.CharField(max_length=4,blank=True)
-    road_operator_name=models.CharField(max_length=20,blank=True)
+    road_name=models.CharField(max_length=100,blank=True, null=True)
+    road_name_abbr=models.CharField(max_length=4,blank=True, null=True)
+    road_code=models.CharField(max_length=4,blank=True, null=True)
+    road_operator_name=models.CharField(max_length=20,blank=True, null=True)
 
 
 

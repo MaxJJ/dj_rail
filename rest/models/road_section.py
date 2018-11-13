@@ -3,7 +3,7 @@ from .place import Place
 
 class RoadSection(models.Model):
 
-    road = models.CharField(max_length=6,blank=True, null=True)
+    road = models.CharField(max_length=50,blank=True, null=True)
     in_station = models.ForeignKey('Place', related_name="road_in_station", on_delete=models.SET_NULL, null=True)
     out_station = models.ForeignKey('Place', related_name="road_out_station", on_delete=models.SET_NULL, null=True)
     
