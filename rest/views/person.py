@@ -25,6 +25,19 @@ class PersonView(APIView):
             serializer=PersonSerializer(person)
         return Response(serializer.data)
 
+class AllPersonsView(APIView):
+
+    """
+    Fetch All Person items
+    """
+
+    def get(self,request):
+        persons=Person.objects.all()
+        serializer = PersonSerializer(persons,many=True)
+        return Response(serializer.data)
+
+        
+
 class SavePersonView(APIView):
     """
     Save Person view 

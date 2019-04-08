@@ -1,3 +1,3 @@
 {
-    "python.pythonPath": "${workspaceFolder}\\rest_rail-env\\Scripts\\python.exe"
+    "python.pythonPath": "rest_rail-env\\Scripts\\python.exe"
 }
