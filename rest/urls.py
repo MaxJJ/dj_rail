@@ -10,6 +10,7 @@ from .views.person import PersonView, PersonSearchView, SavePersonView, AllPerso
 from .views.directories import UnitSearchView, PackageSearchView, CountriesView
 from .views.invoice import InvoiceView, CreateShipmentsInvoice, ShipmentsInvoices
 from .views.railbill import RailbillView, CreateRailbill, CreateRoadSection
+from .views.kps import KpsLogin, KpsFindStation
 
 
 urlpatterns = [
@@ -69,6 +70,11 @@ urlpatterns = [
     path('api/directories/units', UnitSearchView.as_view()),
     path('api/directories/packages', PackageSearchView.as_view()),
     path('api/directories/countries', CountriesView.as_view()),
+
+    path('api/kps/login', KpsLogin.as_view()),
+    path('api/kps/find_station', KpsFindStation.as_view()),
+
+
 
 
 
