@@ -12,16 +12,15 @@ TOKEN = {'Cookie': ''}
 class KpsLoginPlugin(Plugin):
 
     def ingress(self, envelope, http_headers, operation):
-        print(etree.tostring(envelope, pretty_print=True))
+        # print(etree.tostring(envelope, pretty_print=True))
         TOKEN['Cookie'] = http_headers['Set-Cookie']
         return envelope, http_headers
 
     def egress(self, envelope, http_headers, operation, binding_options):
-        print(etree.tostring(envelope, pretty_print=True))
+        # print(etree.tostring(envelope, pretty_print=True))
         http_headers.update(
             {'Content-Type': "application/soap+xml"})
         http_headers.update(TOKEN)
-        print('headers --- '+str(http_headers))
         return envelope, http_headers
 
 
@@ -45,21 +44,17 @@ class Kps:
             transport=transport,
             plugins=[KpsLoginPlugin(), ])
 
+        self.client_cnotes = Client(
+            'https://tkps-http.ldz.lv/kpsws-webapp/Cnotes?wsdl',
+            settings=settings,
+            transport=transport,
+            plugins=[KpsLoginPlugin(), ])
+
 
 KPS = Kps()
 
 
 def doLogin():
-    # session = Session()
-    # session.verify = False
-
-    # transport = Transport(session=session)
-    # settings = Settings(strict=False, xml_huge_tree=True)
-
-    # client = Client(
-    #     'https://tkps-http.ldz.lv/kpsws-webapp/Login?wsdl', settings=settings,
-    #     transport=transport, plugins=[KpsLoginPlugin(), ])
-
     client = KPS.client_login
     with client.settings(raw_response=False):
 

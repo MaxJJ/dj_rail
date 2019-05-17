@@ -1,5 +1,9 @@
 from .kps_login import doLogin, TOKEN, KPS, Kps
 import json
+from .cnotes import saveSmgsDraft
+
+client = KPS.client_classifiers
+service = client.bind('Classifiers', 'classifiers')
 
 
 def request(**kwargs):
@@ -19,16 +23,14 @@ def request(**kwargs):
         req['Sort'] = {'Field': srt[0],
                        'Order': srt[1]
                        }
-    print(req)
     return req
 
 
 def findStation(qry):
-    doLogin()
-    print(TOKEN)
+    print('token: '+str(TOKEN))
+    if TOKEN['Cookie'] == '':
+        doLogin()
 
-    client = KPS.client_classifiers
-    service = client.bind('Classifiers', 'classifiers')
     qr = ('%'+qry+'%').encode()
     req_by_name = request(Limit=10, Offset=0, Filter=('Name', 'Like', qr))
     req_by_code = request(Limit=10, Offset=0, Filter=('Code', 'Like', qr))
@@ -42,6 +44,8 @@ def findStation(qry):
             ListRequest=req_by_code,
             _soapheaders={'Accept-Language': 'RU'}
         )
+
+        # saveSmgsDraft()
 
         result = []
 
@@ -60,3 +64,16 @@ def findStation(qry):
                 st_dict[key] = st[key]
             res.append(st_dict)
         return res
+
+
+def findUnits():
+    if TOKEN['Cookie'] == '':
+        doLogin()
+    qr = ('%'+'килогра'+'%').encode()
+    req = request(Limit=500, Offset=8, Filter=('Name', 'Like', qr))
+    result = service.getMeasurementList(
+        MeasurementListRequest=req,
+        _soapheaders={'Accept-Language': 'RU'}
+    )
+
+    print(result.__dict__)
