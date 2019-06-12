@@ -1,5 +1,5 @@
 from django.urls import path
-from .views.place import Places, SearchPlaces
+from .views.place import Places, SearchPlaces, CreatePlace
 from .views.order import OrderList, OrdersInWork, OneOrder, NewOrder, InboundDocsView, AddInboundDocView, DeleteOrder
 from .views.cargo import NewCargo, DeleteCargo, CargoItemView, CargoByShipmentView, CargoSearchView, FacturasCargo, IndexedCargoView
 from .views.shipment import ShipmentView, CreateShipment, ShipmentInfoView, OrdersShipments
@@ -27,6 +27,8 @@ urlpatterns = [
 
     path('api/places', Places.as_view()),
     path('api/places/search', SearchPlaces.as_view()),
+    path('api/places/create', CreatePlace.as_view()),
+
     path('api/getnewcargo', NewCargo.as_view()),
     path('api/deletecargo/<int:id>', DeleteCargo.as_view()),
 

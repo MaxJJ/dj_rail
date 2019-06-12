@@ -27,7 +27,6 @@ def request(**kwargs):
 
 
 def findStation(qry):
-    print('token: '+str(TOKEN))
     if TOKEN['Cookie'] == '':
         doLogin()
 
